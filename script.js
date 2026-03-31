@@ -124,7 +124,7 @@ function renderWeek(direction = "") {
       </ul>
       <form class="task-form" data-date="${dateKey}">
         <input class="task-input" type="text" placeholder="Add a task" maxlength="120" required />
-        <button class="add-btn" type="submit">Add</button>
+        <button class="add-btn" type="submit">Add Task</button>
       </form>
     `;
 
