@@ -359,6 +359,28 @@ h1 {
   border-radius: 999px;
   cursor: pointer;
   transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nav-arrow {
+  font-size: 1.1em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 280ms ease;
+}
+
+/* Left arrow animation for Previous Week button */
+.nav-btn--prev:hover .nav-arrow {
+  transform: translateX(-4px);
+}
+
+/* Right arrow animation for Next Week button */
+.nav-btn--next:hover .nav-arrow {
+  transform: translateX(4px);
 }
 
 .nav-btn:hover {
@@ -461,6 +483,11 @@ h1 {
     min-width: 0;
     font-size: 0.8rem;
     padding: 9px 10px;
+    gap: 6px;
+  }
+
+  .nav-arrow {
+    font-size: 1em;
   }
 
   .add-btn {
