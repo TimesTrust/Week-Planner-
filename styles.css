@@ -141,6 +141,15 @@ h1 {
   flex-direction: column;
   gap: 9px;
   overflow-y: auto;
+  transition: background-color 200ms ease, border-color 200ms ease;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+/* Drag over effect */
+.task-list.drag-over {
+  background-color: rgba(124, 140, 255, 0.08);
+  border: 1px dashed var(--accent);
 }
 
 .task-empty {
@@ -157,6 +166,41 @@ h1 {
   border: 1px solid #2d2d2d;
   border-radius: 12px;
   padding: 8px 9px;
+  position: relative;
+  transition: all 200ms ease;
+  cursor: grab;
+}
+
+.task-item:active {
+  cursor: grabbing;
+}
+
+/* Dragging state */
+.task-item.dragging {
+  opacity: 0.6;
+  background: #1a1a1a;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Delete animation */
+.task-item.delete-animating {
+  animation: deleteSlide 300ms ease-out forwards;
+}
+
+@keyframes deleteSlide {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    height: auto;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+    height: 0;
+    padding: 0;
+    margin: 0;
+  }
 }
 
 .task-item input[type="checkbox"] {
@@ -172,6 +216,7 @@ h1 {
   line-height: 1.3;
   word-break: break-word;
   transition: color 220ms ease, opacity 220ms ease;
+  flex: 1;
 }
 
 .task-text.completed {
@@ -181,11 +226,64 @@ h1 {
   opacity: 0.66;
 }
 
+/* Delete button styling */
+.delete-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  background: #ef4444;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 200ms ease;
+  flex-shrink: 0;
+}
+
+.delete-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5;
+}
+
+/* Show delete button on hover */
+.task-item:hover .delete-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Delete button hover effect */
+.delete-btn:hover {
+  background: #dc2626;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.delete-btn:active {
+  background: #b91c1c;
+  transform: scale(0.95);
+}
+
+/* Touch device support - show delete button on touch */
+@media (hover: none) and (pointer: coarse) {
+  .delete-btn {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .task-form {
   margin-top: auto;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .task-input {
@@ -212,19 +310,35 @@ h1 {
 
 .add-btn {
   border: none;
-  border-radius: 999px;
-  padding: 9px 11px;
+  width: 100%;
+  min-height: clamp(36px, 4vw, 42px);
+  border-radius: 12px;
+  padding: 10px 14px;
   font: inherit;
   font-weight: 600;
+  font-size: clamp(0.78rem, 1.1vw, 0.92rem);
+  letter-spacing: 0.01em;
   color: #ffffff;
-  background: var(--accent);
+  background: linear-gradient(180deg, #8d9bff 0%, var(--accent) 100%);
   cursor: pointer;
-  transition: transform 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, opacity 180ms ease;
 }
 
 .add-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(124, 140, 255, 0.28);
+  box-shadow: 0 10px 22px rgba(124, 140, 255, 0.34);
+  filter: brightness(1.05);
+}
+
+.add-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(124, 140, 255, 0.24);
+  filter: brightness(0.96);
+}
+
+.add-btn:focus-visible {
+  outline: 2px solid rgba(157, 171, 255, 0.9);
+  outline-offset: 2px;
 }
 
 .planner-nav {
@@ -283,6 +397,26 @@ h1 {
   }
 }
 
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .task-item {
+    padding: 10px 36px 10px 9px;
+  }
+
+  .delete-btn {
+    opacity: 1;
+    transform: scale(1);
+    top: 2px;
+    right: 2px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .task-list {
+    padding: 6px;
+  }
+}
+
 @media (max-width: 940px) {
   body {
     padding: 16px;
@@ -329,13 +463,8 @@ h1 {
     padding: 9px 10px;
   }
 
-  .task-form {
-    grid-template-columns: 1fr auto;
-  }
-
   .add-btn {
-    font-size: 0.75rem;
-    padding: 8px 9px;
+    min-height: 36px;
   }
 
   .date-chip {
