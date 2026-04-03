@@ -1,0 +1,510 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  --bg: #121212;
+  --surface: #171717;
+  --card-bg: #1e1e1e;
+  --text-main: #f5f5f5;
+  --text-soft: #a3a3a3;
+  --accent: #7c8cff;
+  --accent-soft: rgba(124, 140, 255, 0.16);
+  --line: #2b2b2b;
+  --line-strong: #3b3b3b;
+  --ok: #84d2a8;
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  --radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Inter", "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text-main);
+  background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg) 45%);
+  padding: 28px;
+}
+
+.app-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid #252525;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.app-header {
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+h1 {
+  margin: 8px 0 6px;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.week-range {
+  margin: 0;
+  color: var(--text-soft);
+  font-weight: 500;
+  font-size: 0.93rem;
+}
+
+.planner-grid-wrapper {
+  overflow-x: hidden;
+  padding-bottom: 6px;
+}
+
+.planner-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: auto minmax(290px, 1fr);
+  gap: clamp(6px, 1.2vw, 12px);
+}
+
+.day-header,
+.day-card {
+  border-radius: var(--radius);
+}
+
+.day-header {
+  background: transparent;
+  border: none;
+  color: #c6c6c6;
+  font-size: clamp(0.72rem, 1.3vw, 0.9rem);
+  font-weight: 600;
+  text-align: center;
+  padding: 10px 8px;
+  letter-spacing: 0.02em;
+  box-shadow: none;
+}
+
+.day-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: clamp(8px, 1.2vw, 14px);
+  transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease, background-color 250ms ease;
+}
+
+.day-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.38);
+}
+
+.day-card.current-day {
+  border-color: #5d71ff;
+  background: #202335;
+  box-shadow: 0 0 0 2px var(--accent-soft), 0 12px 28px rgba(89, 108, 255, 0.22);
+}
+
+.date-chip {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: #d4d4d4;
+  background: #2a2a2a;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.day-title-mobile {
+  display: none;
+}
+
+.task-list {
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  overflow-y: auto;
+  transition: background-color 200ms ease, border-color 200ms ease;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+/* Drag over effect */
+.task-list.drag-over {
+  background-color: rgba(124, 140, 255, 0.08);
+  border: 1px dashed var(--accent);
+}
+
+.task-empty {
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  padding: 4px 2px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #252525;
+  border: 1px solid #2d2d2d;
+  border-radius: 12px;
+  padding: 8px 9px;
+  position: relative;
+  transition: all 200ms ease;
+  cursor: grab;
+}
+
+.task-item:active {
+  cursor: grabbing;
+}
+
+/* Dragging state */
+.task-item.dragging {
+  opacity: 0.6;
+  background: #1a1a1a;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Delete animation */
+.task-item.delete-animating {
+  animation: deleteSlide 300ms ease-out forwards;
+}
+
+@keyframes deleteSlide {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    height: auto;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+    height: 0;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.task-item input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--ok);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.task-text {
+  font-size: clamp(0.78rem, 1.2vw, 0.9rem);
+  line-height: 1.3;
+  word-break: break-word;
+  transition: color 220ms ease, opacity 220ms ease;
+  flex: 1;
+}
+
+.task-text.completed {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  color: #9aa0aa;
+  opacity: 0.66;
+}
+
+/* Delete button styling */
+.delete-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  background: #ef4444;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 200ms ease;
+  flex-shrink: 0;
+}
+
+.delete-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.5;
+}
+
+/* Show delete button on hover */
+.task-item:hover .delete-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Delete button hover effect */
+.delete-btn:hover {
+  background: #dc2626;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.delete-btn:active {
+  background: #b91c1c;
+  transform: scale(0.95);
+}
+
+/* Touch device support - show delete button on touch */
+@media (hover: none) and (pointer: coarse) {
+  .delete-btn {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.task-form {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-input {
+  border: 1px solid transparent;
+  border-bottom: 1px solid var(--line-strong);
+  border-radius: 8px;
+  color: #f0f0f0;
+  background: #232323;
+  padding: 9px 9px;
+  font-size: clamp(0.76rem, 1.15vw, 0.9rem);
+  font: inherit;
+  transition: border-color 220ms ease, background-color 220ms ease;
+}
+
+.task-input::placeholder {
+  color: #8f8f8f;
+}
+
+.task-input:focus {
+  outline: none;
+  background: #272727;
+  border-color: var(--accent);
+}
+
+.add-btn {
+  border: none;
+  width: 100%;
+  min-height: clamp(36px, 4vw, 42px);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 600;
+  font-size: clamp(0.78rem, 1.1vw, 0.92rem);
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  background: linear-gradient(180deg, #8d9bff 0%, var(--accent) 100%);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease, opacity 180ms ease;
+}
+
+.add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(124, 140, 255, 0.34);
+  filter: brightness(1.05);
+}
+
+.add-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(124, 140, 255, 0.24);
+  filter: brightness(0.96);
+}
+
+.add-btn:focus-visible {
+  outline: 2px solid rgba(157, 171, 255, 0.9);
+  outline-offset: 2px;
+}
+
+.planner-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.nav-btn {
+  min-width: 132px;
+  border: none;
+  background: #2a2a38;
+  color: #d8deff;
+  font: inherit;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.nav-arrow {
+  font-size: 1.1em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 280ms ease;
+}
+
+/* Left arrow animation for Previous Week button */
+.nav-btn--prev:hover .nav-arrow {
+  transform: translateX(-4px);
+}
+
+/* Right arrow animation for Next Week button */
+.nav-btn--next:hover .nav-arrow {
+  transform: translateX(4px);
+}
+
+.nav-btn:hover {
+  transform: translateY(-1px);
+  background: #34344a;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+}
+
+.planner-grid.switch-left {
+  animation: switchLeft 280ms ease;
+}
+
+.planner-grid.switch-right {
+  animation: switchRight 280ms ease;
+}
+
+@keyframes switchLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes switchRight {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .task-item {
+    padding: 10px 36px 10px 9px;
+  }
+
+  .delete-btn {
+    opacity: 1;
+    transform: scale(1);
+    top: 2px;
+    right: 2px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .task-list {
+    padding: 6px;
+  }
+}
+
+@media (max-width: 940px) {
+  body {
+    padding: 16px;
+  }
+
+  .app-shell {
+    padding: 10px;
+  }
+
+  .planner-grid {
+    grid-template-rows: auto minmax(260px, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 10px;
+  }
+
+  .app-shell {
+    padding: 8px;
+    border-radius: 14px;
+  }
+
+  .planner-grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-rows: auto minmax(210px, 1fr);
+    gap: 6px;
+  }
+
+  .day-header {
+    font-size: 0.7rem;
+    padding: 6px 2px;
+  }
+
+  .planner-nav {
+    margin-top: 14px;
+  }
+
+  .nav-btn {
+    width: 49%;
+    min-width: 0;
+    font-size: 0.8rem;
+    padding: 9px 10px;
+    gap: 6px;
+  }
+
+  .nav-arrow {
+    font-size: 1em;
+  }
+
+  .add-btn {
+    min-height: 36px;
+  }
+
+  .date-chip {
+    font-size: 0.63rem;
+    padding: 3px 7px;
+  }
+
+  .task-item {
+    padding: 6px 7px;
+  }
+
+  .task-item input[type="checkbox"] {
+    width: 13px;
+    height: 13px;
+  }
+}
