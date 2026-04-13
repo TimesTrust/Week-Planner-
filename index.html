@@ -11,24 +11,46 @@
     <header class="app-header">
       <p class="eyebrow">Plan Ahead</p>
       <h1>Weekly Planner</h1>
-      <p id="weekRange" class="week-range" aria-live="polite"></p>
+      <p id="viewSubtitle" class="week-range" aria-live="polite"></p>
     </header>
 
-    <section class="planner-grid-wrapper" aria-label="Weekly planner layout">
-      <div id="plannerGrid" class="planner-grid"></div>
+    <section id="weekView" class="view-panel is-active" aria-label="Weekly planner view">
+      <section class="planner-grid-wrapper" aria-label="Weekly planner layout">
+        <div id="plannerGrid" class="planner-grid"></div>
+      </section>
+
+      <footer class="planner-nav">
+        <button id="prevWeekBtn" class="nav-btn nav-btn--prev" type="button" aria-label="Go to previous week">
+          <span class="nav-arrow">←</span>
+          <span class="nav-text">Previous Week</span>
+        </button>
+        <button id="nextWeekBtn" class="nav-btn nav-btn--next" type="button" aria-label="Go to next week">
+          <span class="nav-text">Next Week</span>
+          <span class="nav-arrow">→</span>
+        </button>
+      </footer>
     </section>
 
-    <footer class="planner-nav">
-      <button id="prevWeekBtn" class="nav-btn nav-btn--prev" type="button" aria-label="Go to previous week">
-        <span class="nav-arrow">←</span>
-        <span class="nav-text">Previous Week</span>
-      </button>
-      <button id="nextWeekBtn" class="nav-btn nav-btn--next" type="button" aria-label="Go to next week">
-        <span class="nav-text">Next Week</span>
-        <span class="nav-arrow">→</span>
-      </button>
-    </footer>
+    <section id="calendarView" class="view-panel" aria-label="Monthly calendar view" aria-hidden="true">
+      <div class="calendar-topbar">
+        <button id="prevMonthBtn" class="month-nav-btn" type="button" aria-label="Go to previous month">←</button>
+        <h2 id="monthLabel" class="month-label"></h2>
+        <button id="nextMonthBtn" class="month-nav-btn" type="button" aria-label="Go to next month">→</button>
+      </div>
+      <div id="calendarGrid" class="calendar-grid"></div>
+    </section>
   </main>
+
+  <nav class="bottom-taskbar" aria-label="View navigation">
+    <button id="weekViewBtn" class="taskbar-btn is-active" type="button" data-view="week" aria-pressed="true">
+      <span class="taskbar-icon" aria-hidden="true">▦</span>
+      <span>Week View</span>
+    </button>
+    <button id="calendarViewBtn" class="taskbar-btn" type="button" data-view="calendar" aria-pressed="false">
+      <span class="taskbar-icon" aria-hidden="true">▣</span>
+      <span>Calendar View</span>
+    </button>
+  </nav>
 
   <script src="script.js"></script>
 </body>

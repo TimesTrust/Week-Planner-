@@ -26,6 +26,7 @@ body {
   color: var(--text-main);
   background: radial-gradient(circle at top, #1a1a1a 0%, var(--bg) 45%);
   padding: 28px;
+  padding-bottom: 116px;
 }
 
 .app-shell {
@@ -36,6 +37,24 @@ body {
   border-radius: 20px;
   box-shadow: var(--shadow);
   padding: 16px;
+  overflow: hidden;
+}
+
+.view-panel {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.view-panel.is-active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  max-height: none;
+  overflow: visible;
 }
 
 .app-header {
@@ -248,6 +267,32 @@ h1 {
   flex-shrink: 0;
 }
 
+.edit-btn {
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background: #2f3340;
+  color: #d8ddff;
+  cursor: pointer;
+  font-size: 0.78rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 200ms ease, transform 200ms ease, background-color 200ms ease;
+}
+
+.task-item:hover .edit-btn {
+  opacity: 1;
+}
+
+.edit-btn:hover {
+  background: #3a4054;
+  transform: translateY(-1px);
+}
+
 .delete-btn svg {
   width: 16px;
   height: 16px;
@@ -276,6 +321,10 @@ h1 {
   .delete-btn {
     opacity: 1;
     transform: scale(1);
+  }
+
+  .edit-btn {
+    opacity: 1;
   }
 }
 
@@ -346,6 +395,163 @@ h1 {
   justify-content: space-between;
   gap: 12px;
   margin-top: 18px;
+}
+
+.calendar-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.month-label {
+  margin: 0;
+  font-size: clamp(1.05rem, 2.2vw, 1.4rem);
+  letter-spacing: 0.01em;
+}
+
+.month-nav-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid #343752;
+  background: #252837;
+  color: #d8deff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+}
+
+.month-nav-btn:hover {
+  transform: translateY(-1px);
+  background: #2f3348;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.32);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(8px, 1.2vw, 12px);
+}
+
+.calendar-day-name {
+  text-align: center;
+  color: #c6c6c6;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 4px;
+}
+
+.calendar-day {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, #1f1f1f 0%, #1b1b1b 100%);
+  box-shadow: var(--shadow);
+  padding: 10px;
+  transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+}
+
+.calendar-day:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.38);
+}
+
+.calendar-day.is-outside-month {
+  opacity: 0.44;
+}
+
+.calendar-day.current-day {
+  border-color: #5d71ff;
+  box-shadow: 0 0 0 2px var(--accent-soft), 0 10px 24px rgba(89, 108, 255, 0.2);
+}
+
+.calendar-date {
+  width: fit-content;
+  min-width: 28px;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #dde3ff;
+  background: #2a2d3b;
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+
+.calendar-day .task-list {
+  margin-top: 0;
+  min-height: 86px;
+  max-height: 156px;
+  padding: 2px;
+}
+
+.calendar-day .task-item {
+  padding: 6px 8px;
+}
+
+.calendar-day .task-input {
+  font-size: 0.78rem;
+  padding: 7px 8px;
+}
+
+.calendar-day .add-btn {
+  min-height: 32px;
+  font-size: 0.78rem;
+  padding: 7px 10px;
+}
+
+.bottom-taskbar {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: min(560px, calc(100% - 20px));
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 9px;
+  border-radius: 18px 18px 14px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(19, 19, 22, 0.76);
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+  z-index: 50;
+}
+
+.taskbar-btn {
+  border: 1px solid transparent;
+  border-radius: 12px;
+  min-height: 48px;
+  color: #d7d8e0;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease, transform 220ms ease;
+}
+
+.taskbar-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+.taskbar-btn.is-active {
+  background: #2a2f4a;
+  border-color: #3d4672;
+  color: #f2f4ff;
+}
+
+.taskbar-icon {
+  font-size: 0.95rem;
 }
 
 .nav-btn {
@@ -442,6 +648,7 @@ h1 {
 @media (max-width: 940px) {
   body {
     padding: 16px;
+    padding-bottom: 104px;
   }
 
   .app-shell {
@@ -456,6 +663,7 @@ h1 {
 @media (max-width: 640px) {
   body {
     padding: 10px;
+    padding-bottom: 96px;
   }
 
   .app-shell {
@@ -506,5 +714,21 @@ h1 {
   .task-item input[type="checkbox"] {
     width: 13px;
     height: 13px;
+  }
+
+  .calendar-day {
+    min-height: 140px;
+  }
+
+  .bottom-taskbar {
+    width: calc(100% - 12px);
+    bottom: 6px;
+    border-radius: 16px 16px 12px 12px;
+    padding: 7px;
+  }
+
+  .taskbar-btn {
+    min-height: 42px;
+    font-size: 0.86rem;
   }
 }
